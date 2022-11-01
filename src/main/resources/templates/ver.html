@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<title th:text="${titulo}"></title>
+<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+<link rel="stylesheet" th:href="@{/css/jquery-ui.min.css}">
+
+</head>
+<body>
+
+	<nav class="navbar navbar-expand-lg navbar-light bg-light">
+		<a class="navbar-brand" href="#">Springboot</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse"
+			data-target="#navbarSupportedContent"
+			aria-controls="navbarSupportedContent" aria-expanded="false"
+			aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+
+		<div class="collapse navbar-collapse" id="navbarSupportedContent">
+			<ul class="navbar-nav mr-auto">
+				<li class="nav-item active"><a class="nav-link" href="#">Home
+						<span class="sr-only">(current)</span>
+				</a></li>
+				<li class="nav-item"><a class="nav-link" th:href="@{/listar}">Clientes</a>
+				</li>
+		</div>
+	</nav>
+
+	<div class="container py-4">
+		<div class="card bg-light">
+			<div class="card-header" th:text="${titulo}"></div>
+			<div class="card-body">
+
+				<h4 class="card-title">
+					<a class="btn btn-primary btn-xs"
+						th:href="@{/factura/form/} + ${cliente.id}">Crear Factura</a>
+				</h4>
+				<img th:if="${#strings.length(cliente.foto) > 0}"
+					class="img-thumbnail rounded float-left" style="max-width: 25%;"
+					th:src="@{'/uploads/' + ${cliente.foto}}" th:alt="${cliente.foto}">
+
+				<ul class=list-group>
+					<li class="list-group-item" th:text="${cliente.nombre}"></li>
+					<li class="list-group-item" th:text="${cliente.apellido}"></li>
+					<li class="list-group-item" th:text="${cliente.email}"></li>
+					<li class="list-group-item" th:text="${cliente.createAt}"></li>
+
+				</ul>
+				<div th:if="${#lists.isEmpty(cliente.facturas)}"
+					class="alert alert-info my-4"
+					th:text="'No hay facturas asociadas al cliente ' + ${cliente.nombre} + ' ' + ${cliente.apellido}">
+				</div>
+				<table th:if="${not #lists.isEmpty(cliente.facturas)}"
+					class="table table-bordered table-striped my-4">
+					<thead>
+						<tr>
+							<th>Folio</th>
+							<th>Descripcion</th>
+							<th>Fecha</th>
+							<th>Total</th>
+						</tr>
+					</thead>
+
+					<tbody>
+						<tr th:each="factura: ${cliente.facturas}">
+							<td th:text="${factura.id}"></td>
+							<td th:text="${factura.descripcion}"></td>
+							<td th:text="${factura.createAt}"></td>
+							<td th:text="${factura.total}"></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	
+	<script th:scr="@{/js/jquery-3.2.1.min.js}"></script>
+	<script th:scr="@{/js/bootstrap.min.js}"></script>
+	<script th:scr="@{/js/jquery-ui.min.js}"></script>
+
+</body>
+</html>

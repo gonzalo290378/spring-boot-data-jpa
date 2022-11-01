@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<title th:text="${titulo}"></title>
+<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+<link rel="stylesheet" th:href="@{/css/jquery-ui.min.css}">
+
+</head>
+<body>
+
+	<nav class="navbar navbar-expand-lg navbar-light bg-light">
+		<a class="navbar-brand" href="#">Springboot</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse"
+			data-target="#navbarSupportedContent"
+			aria-controls="navbarSupportedContent" aria-expanded="false"
+			aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+
+		<div class="collapse navbar-collapse" id="navbarSupportedContent">
+			<ul class="navbar-nav mr-auto">
+				<li class="nav-item active"><a class="nav-link" href="#">Home
+						<span class="sr-only">(current)</span>
+				</a></li>
+				<li class="nav-item"><a class="nav-link" th:href="@{/listar}">Clientes</a>
+				</li>
+		</div>
+	</nav>
+
+	<div class="container">
+
+		<h1
+			class="text-secondary border border-success border-top-0 border-left-0 border-right-0"
+			th:text="${titulo}"></h1>
+
+		<a th:href="@{/form}">Crear Cliente</a>
+
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>id</th>
+					<th>nombre</th>
+					<th>apellido</th>
+					<th>email</th>
+					<th>fecha</th>
+					<th>crear factura</th>
+					<th>editar</th>
+					<th>eliminar</th>
+
+
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="cliente: ${clientes}">
+					<td><a class="btn btn-primary" th:href="@{/ver/} + ${cliente.id}" th:text="${cliente.id}"></a></td>
+					<td th:text="${cliente.nombre}"></td>
+					<td th:text="${cliente.apellido}"></td>
+					<td th:text="${cliente.email}"></td>
+					<td th:text="${cliente.createAt}"></td>
+					<td><a class="btn btn-success btn-xs" th:href="@{/factura/form/} + ${cliente.id}">Crear Factura</a></td>
+					<td><a th:href="@{/form/} + ${cliente.id}">Editar</a></td>
+					<td><a th:href="@{/eliminar/} + ${cliente.id}">Eliminar</a></td>
+
+				</tr>
+			</tbody>
+		</table>
+		<nav th:replace="paginator-nav :: paginator"></nav>
+
+	</div>
+
+	<script th:scr="@{/js/jquery-3.2.1.min.js}"></script>
+	<script th:scr="@{/js/bootstrap.min.js}"></script>
+	<script th:scr="@{/js/jquery-ui.min.js}"></script>
+
+</body>
+</html>

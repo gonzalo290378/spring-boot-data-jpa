@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<title th:text="${titulo}"></title>
+<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+<link rel="stylesheet" th:href="@{/css/jquery-ui.min.css}">
+
+</head>
+<body>
+
+	<nav class="navbar navbar-expand-lg navbar-light bg-light">
+		<a class="navbar-brand" href="#">Springboot</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse"
+			data-target="#navbarSupportedContent"
+			aria-controls="navbarSupportedContent" aria-expanded="false"
+			aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+
+		<div class="collapse navbar-collapse" id="navbarSupportedContent">
+			<ul class="navbar-nav mr-auto">
+				<li class="nav-item active"><a class="nav-link" href="#">Home
+						<span class="sr-only">(current)</span>
+				</a></li>
+				<li class="nav-item"><a class="nav-link" th:href="@{/listar}">Clientes</a>
+				</li>
+		</div>
+	</nav>
+
+	<div class="container">
+
+		<h1
+			class="text-secondary border border-success border-top-0 border-left-0 border-right-0"
+			th:text="${titulo}"></h1>
+		<form th:action="@{/form}" th:object="${cliente}" method="POST"
+			enctype="multipart/form-data">
+
+			<div class="form-group row">
+
+				<label class="col-form-group col-sm-2">Nombre</label>
+
+				<div class="col-sm-6">
+					<input type="text" th:field="*{nombre}" class="form-control" /> <small
+						th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"
+						class="form-text text-danger"></small>
+				</div>
+			</div>
+
+
+
+			<div class="form-group row">
+
+				<label class="col-form-group col-sm-2">Apellido</label>
+
+				<div class="col-sm-6">
+					<input type="text" th:field="*{apellido}" class="form-control" />
+					<small th:if="${#fields.hasErrors('apellido')}"
+						th:errors="*{apellido}" class="form-text text-danger"></small>
+
+				</div>
+			</div>
+
+
+			<div class="form-group row">
+
+				<label class="col-form-group col-sm-2">Email</label>
+
+				<div class="col-sm-6">
+					<input type="text" th:field="*{email}" class="form-control" /> <small
+						th:if="${#fields.hasErrors('email')}" th:errors="*{email}"
+						class="form-text text-danger"></small>
+
+				</div>
+			</div>
+
+
+			<div class="form-group row">
+
+				<label class="col-form-group col-sm-2">Fecha</label>
+
+				<div class="col-sm-6">
+					<input type="text" th:field="*{createAt}" class="form-control" />
+					<small th:if="${#fields.hasErrors('createAt')}"
+						th:errors="*{createAt}" class="form-text text-danger"></small>
+
+				</div>
+			</div>
+
+			<div class="form-group row">
+
+				<label for="file" class="col-sm-2 col-form-label">Fecha</label>
+
+				<div class="col-sm-6">
+					<input type="file" name="file" class="form-control" />
+				</div>
+			</div>
+
+			<div class="form-group row">
+				<div class="col-sm-6">
+
+					<input type="submit" value="Crear cliente" class="btn btn-primary" />
+
+				</div>
+			</div>
+
+		</form>
+
+
+	</div>
+
+	<script th:scr="@{/js/jquery-3.2.1.min.js}"></script>
+	<script th:scr="@{/js/bootstrap.min.js}"></script>
+	<script th:scr="@{/js/jquery-ui.min.js}"></script>
+	
+</body>
+</html>
