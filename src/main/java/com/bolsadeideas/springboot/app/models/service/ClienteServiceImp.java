@@ -47,7 +47,7 @@ public class ClienteServiceImp implements IClienteService {
 
 	@Transactional(readOnly = true)
 	public List<Producto> findByNombre(String term) {
-		return productoDAO.buscarPorNombre(term);
+		return productoDAO.findByNombreLikeIgnoreCase(term);
 	}
 
 }

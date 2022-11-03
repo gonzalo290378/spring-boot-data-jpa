@@ -41,8 +41,7 @@ public class FacturaController {
 
 	@GetMapping(value = "/cargar-productos/{term}", produces = { "application/json" })
 	public @ResponseBody List<Producto> cargarProductos(@PathVariable(value = "term")  String term) {
-
-		List<Producto> listaAutocomplete = clienteService.findByNombre(term);
+		List<Producto> listaAutocomplete = clienteService.findByNombre("%" + term + "%");
 		return listaAutocomplete;
 	}
 }
