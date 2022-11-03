@@ -29,6 +29,12 @@
 				
     				
 				select : function(event, ui) {
+					if(itemsHelper.hasProducto(ui.item.value)){
+					
+					itemsHelper.incrementaCantidad(ui.item.value, ui.item.precio);
+					return false;
+					}
+				
 					var linea = $("#plantillaItemsFactura").html();
 					linea = linea.replace(/{ID}/g, ui.item.value);
 					linea = linea.replace(/{NOMBRE}/g, ui.item.label);
@@ -43,7 +49,34 @@
 		var itemsHelper = {
 			calcularImporte: function(id, precio, cantidad){
 				$("#total_importe_" + id).html(parseInt(precio) * parseInt(cantidad));
-			}
+			},
+			
+			hasProducto: function(id){
+				var resultado = false;
+				$('input[name = "item_id[]"]').each(function(){
+					if(parseInt(id) == ($(this).val())){
+					resultado = true;
+					}
+					
+					
+				});
+				
+				return resultado;
+			},
+			incrementaCantidad: function(id, precio){
+				
+				var cantidad = $("#cantidad_" + id).val() ? parseInt($("#cantidad_" + id).val()) :0;
+				$("#cantidad_" + id).val(++cantidad);
+				this.calcularImporte(id, precio, cantidad); 
+			},
+			
+			eliminarLineaFactura: function(id){
+				$("#row_" + id).remove();
+				
+			
+			},
+			
+			
 		}
 		
 	</script>
