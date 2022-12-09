@@ -26,6 +26,21 @@
 				</a></li>
 				<li class="nav-item"><a class="nav-link" th:href="@{/listar}">Clientes</a>
 				</li>
+			</ul>
+			<ul class="navbar-nav navbar-right">
+				<li sec:authorize="!isAuthenticated()"><a class="btn btn-outline-primary" href="/login">Sign in</a></li>
+				<li sec:authorize="isAuthenticated()"><a class="btn btn-outline-primary" onclick="document.getElementById('logoutForm').submit();" type="submit">Log out</a>
+					<form id="logoutForm" th:action="@{/logout}" method="POST">
+						<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+					</form>	
+				</li>
+
+			</ul>
+			
+			<p sec:authorize="isAuthenticated()">
+				Usuario logueado: <span sec:authentication="name"></span> | Roles: <span
+					sec:authentication="principal.authorities"></span>
+			</p>
 		</div>
 	</nav>
 
@@ -35,9 +50,11 @@
 			<div class="card-header" th:text="${titulo}"></div>
 			<div class="card-body">
 				<h4 class="card-title">
-					<a class="btn btn-light btn-xs"
-						th:href="@{/ver/} + ${factura.cliente.id}">&laquo; Volver</a>
+					<a class="btn btn-light btn-xs" th:href="@{/listar/}">&laquo;
+						Volver</a>
 				</h4>
+
+				<div th:text="${errorFactura}"></div>
 
 				<form th:action="@{/factura/form/}" th:object="${factura}"
 					method="POST">
@@ -48,13 +65,20 @@
 							<input
 								th:value="${factura.cliente.nombre} + ' ' + ${factura.cliente.apellido}"
 								disabled='disabled' class="form-control">
+							<!--<input type="hidden" name="id" th:field="*{cliente}"/> -->
+
 						</div>
 					</div>
+
 
 					<div class="form-group row">
 						<label class="col-sm-2 col-form-label">Descripcion</label>
 						<div class="col-sm-6">
-							<input type="text" class="form-control" th:field="*{descripcion}">
+							<input type="text" class="form-control" th:field="*{descripcion}"
+								th:errorclass="'form-control is-invalid'">
+							<div class="invalid-feedback"
+								th:if="${#fields.hasErrors('descripcion')}"
+								th:errors="*{descripcion}"></div>
 						</div>
 					</div>
 
@@ -72,7 +96,10 @@
 							<input type="text" name="buscar_producto" id="buscar_producto"
 								class="form-control" />
 						</div>
+
 					</div>
+
+					<div class="alert alert-danger" th:text="${error}"></div>
 
 					<table th:replace="factura/plantilla-items :: itemsFactura"></table>
 
@@ -87,15 +114,19 @@
 								<th>Eliminar</th>
 							</tr>
 						</thead>
-						
+
 						<tbody>
-						
-						
+
+
 						</tbody>
 
 
 					</table>
-					<h5><span class="badge badge-secondary" id="gran_total"></span>0</h5>
+
+
+					<h5>
+						Total <span class="badge badge-secondary" id="gran_total">0</span>
+					</h5>
 					<div class="form-group row">
 						<div class="col-sm-6">
 							<input type="submit" th:value="${titulo}"

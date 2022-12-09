@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -19,6 +21,9 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "clientes")
@@ -47,9 +52,12 @@ public class Cliente implements Serializable {
 	@Column(name = "create_at")
 	@Temporal(TemporalType.DATE)
 	@DateTimeFormat(pattern = "dd/MM/yyyy")
+	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date createAt;
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "cliente")
+	
+	@OneToMany(mappedBy = "cliente", fetch = FetchType.LAZY , cascade = CascadeType.ALL)
+	@JsonManagedReference
 	private List<Factura> facturas;
 
 	public Cliente() {
@@ -121,6 +129,11 @@ public class Cliente implements Serializable {
 
 	public void setFacturas(List<Factura> facturas) {
 		this.facturas = facturas;
+	}
+
+	@Override
+	public String toString() {
+		return "Nombre: " + nombre + " - Apellido: " + apellido;
 	}
 
 }

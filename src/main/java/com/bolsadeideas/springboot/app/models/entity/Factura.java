@@ -20,8 +20,10 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+
 import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 @Table(name = "facturas")
@@ -34,16 +36,12 @@ public class Factura implements Serializable {
 	private Long id;
 
 	@NotEmpty
-	@Column(name = "nombre")
-	private String nombre;
-
 	@Column(name = "descripcion")
 	private String descripcion;
 
 	@Column(name = "observacion")
 	private String observacion;
 
-	@NotNull
 	@Temporal(TemporalType.DATE)
 	@Column(name = "create_at")
 	@DateTimeFormat(pattern = "dd/MM/yyyy")
@@ -51,6 +49,7 @@ public class Factura implements Serializable {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "cliente_id")
+	@JsonBackReference
 	private Cliente cliente;
 
 	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -72,14 +71,6 @@ public class Factura implements Serializable {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public String getNombre() {
-		return nombre;
-	}
-
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
 	}
 
 	public String getDescripcion() {
@@ -125,16 +116,16 @@ public class Factura implements Serializable {
 	public void addItemFactura(ItemFactura itemFactura) {
 		items.add(itemFactura);
 	}
-	
-	public Double getTotal() {
+
+	public Double obtenerTotal() {
 		Double total = 0.0;
-		
+
 		int size = items.size();
-		
+
 		for (int i = 0; i < size; i++) {
 			total += items.get(i).calcularImporte();
 		}
-		
+
 		return total;
 	}
 
