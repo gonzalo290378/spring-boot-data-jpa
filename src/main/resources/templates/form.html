@@ -25,6 +25,21 @@
 				</a></li>
 				<li class="nav-item"><a class="nav-link" th:href="@{/listar}">Clientes</a>
 				</li>
+			</ul>
+			<ul class="navbar-nav navbar-right">
+				<li sec:authorize="!isAuthenticated()"><a class="btn btn-outline-primary" href="/login">Sign in</a></li>
+				<li sec:authorize="isAuthenticated()"><a class="btn btn-outline-primary" onclick="document.getElementById('logoutForm').submit();" type="submit">Log out</a>
+					<form id="logoutForm" th:action="@{/logout}" method="POST">
+						<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+					</form>	
+				</li>
+
+			</ul>
+			
+			<p sec:authorize="isAuthenticated()">
+				Usuario logueado: <span sec:authentication="name"></span> | Roles: <span
+					sec:authentication="principal.authorities"></span>
+			</p>
 		</div>
 	</nav>
 
@@ -89,7 +104,7 @@
 
 			<div class="form-group row">
 
-				<label for="file" class="col-sm-2 col-form-label">Fecha</label>
+				<label for="file" class="col-sm-2 col-form-label">Imagen</label>
 
 				<div class="col-sm-6">
 					<input type="file" name="file" class="form-control" />

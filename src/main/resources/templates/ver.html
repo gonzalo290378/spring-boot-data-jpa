@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
 <meta charset="UTF-8" />
 <title th:text="${titulo}"></title>
@@ -18,13 +19,28 @@
 			<span class="navbar-toggler-icon"></span>
 		</button>
 
-		<div class="collapse navbar-collapse" id="navbarSupportedContent">
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
 			<ul class="navbar-nav mr-auto">
 				<li class="nav-item active"><a class="nav-link" href="#">Home
 						<span class="sr-only">(current)</span>
 				</a></li>
 				<li class="nav-item"><a class="nav-link" th:href="@{/listar}">Clientes</a>
 				</li>
+			</ul>
+			<ul class="navbar-nav navbar-right">
+				<li sec:authorize="!isAuthenticated()"><a class="btn btn-outline-primary" href="/login">Sign in</a></li>
+				<li sec:authorize="isAuthenticated()"><a class="btn btn-outline-primary" onclick="document.getElementById('logoutForm').submit();" type="submit">Log out</a>
+					<form id="logoutForm" th:action="@{/logout}" method="POST">
+						<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+					</form>	
+				</li>
+
+			</ul>
+			
+			<p sec:authorize="isAuthenticated()">
+				Usuario logueado: <span sec:authentication="name"></span> | Roles: <span
+					sec:authentication="principal.authorities"></span>
+			</p>
 		</div>
 	</nav>
 
@@ -34,7 +50,7 @@
 			<div class="card-body">
 
 				<h4 class="card-title">
-					<a class="btn btn-primary btn-xs"
+					<a sec:authorize="hasRole('ROLE_ADMIN')" class="btn btn-primary btn-xs"
 						th:href="@{/factura/form/} + ${cliente.id}">Crear Factura</a>
 				</h4>
 				<img th:if="${#strings.length(cliente.foto) > 0}"
@@ -60,6 +76,8 @@
 							<th>Descripcion</th>
 							<th>Fecha</th>
 							<th>Total</th>
+							<th sec:authorize="hasRole('ROLE_ADMIN')">Ver</th>
+							<th sec:authorize="hasRole('ROLE_ADMIN')">Eliminar</th>
 						</tr>
 					</thead>
 
@@ -68,11 +86,19 @@
 							<td th:text="${factura.id}"></td>
 							<td th:text="${factura.descripcion}"></td>
 							<td th:text="${factura.createAt}"></td>
-							<td th:text="${factura.total}"></td>
+							<td th:text="${factura.obtenerTotal()}"></td>
+							<td sec:authorize="hasRole('ROLE_ADMIN')"><a class="btn btn-primary"
+								th:href="@{'/factura/ver/' + ${factura.id}}" th:text="'Detalle'"></a></td>
+							<td sec:authorize="hasRole('ROLE_ADMIN')"><a class="btn btn-danger"
+								th:href="@{'/factura/eliminar/' + ${factura.id}}"
+								th:text="'Eliminar'"></a></td>
 						</tr>
 					</tbody>
 				</table>
+
+
 			</div>
+
 		</div>
 	</div>
 

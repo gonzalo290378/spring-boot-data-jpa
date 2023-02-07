@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
 <meta charset="UTF-8" />
 <title th:text="${titulo}"></title>
@@ -25,6 +26,25 @@
 				</a></li>
 				<li class="nav-item"><a class="nav-link" th:href="@{/listar}">Clientes</a>
 				</li>
+			</ul>
+			<ul class="navbar-nav navbar-right">
+				<li sec:authorize="!isAuthenticated()"><a
+					class="btn btn-outline-primary" href="/login">Sign in</a></li>
+				<li sec:authorize="isAuthenticated()"><a
+					class="btn btn-outline-primary"
+					onclick="document.getElementById('logoutForm').submit();"
+					type="submit">Log out</a>
+					<form id="logoutForm" th:action="@{/logout}" method="POST">
+						<input type="hidden" th:name="${_csrf.parameterName}"
+							th:value="${_csrf.token}">
+					</form></li>
+
+			</ul>
+
+			<p sec:authorize="isAuthenticated()">
+				Usuario logueado: <span sec:authentication="name"></span> | Roles: <span
+					sec:authentication="principal.authorities"></span>
+			</p>
 		</div>
 	</nav>
 
@@ -34,35 +54,46 @@
 			class="text-secondary border border-success border-top-0 border-left-0 border-right-0"
 			th:text="${titulo}"></h1>
 
-		<a th:href="@{/form}">Crear Cliente</a>
+		<a sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/form}">Crear
+			Cliente</a> 
+			
+		<a class="btn btn-success btn-xs float-right"
+			th:href="@{'/listar'(format=csv)}">CSV</a>
+
+		<a class="btn btn-warning btn-xs float-right"
+					th:href="@{'/listar'(format=json)}">JSON</a>
 
 		<table class="table table-striped">
 			<thead>
 				<tr>
-					<th>id</th>
+					<th sec:authorize="hasRole('ROLE_USER')">id</th>
 					<th>nombre</th>
 					<th>apellido</th>
 					<th>email</th>
 					<th>fecha</th>
-					<th>crear factura</th>
-					<th>editar</th>
-					<th>eliminar</th>
+					<th sec:authorize="hasRole('ROLE_ADMIN')">crear factura</th>
+					<th sec:authorize="hasRole('ROLE_ADMIN')">editar</th>
+					<th sec:authorize="hasRole('ROLE_ADMIN')">eliminar</th>
 
 
 				</tr>
 			</thead>
 			<tbody>
 				<tr th:each="cliente: ${clientes}">
-					<td><a class="btn btn-primary"
-						th:href="@{/ver/} + ${cliente.id}" th:text="${cliente.id}"></a></td>
+					<td sec:authorize="hasRole('ROLE_USER')"><a
+						class="btn btn-primary" th:href="@{/ver/} + ${cliente.id}"
+						th:text="${cliente.id}"></a></td>
 					<td th:text="${cliente.nombre}"></td>
 					<td th:text="${cliente.apellido}"></td>
 					<td th:text="${cliente.email}"></td>
 					<td th:text="${cliente.createAt}"></td>
-					<td><a class="btn btn-success btn-xs"
+					<td sec:authorize="hasRole('ROLE_ADMIN')"><a
+						class="btn btn-success btn-xs"
 						th:href="@{/factura/form/} + ${cliente.id}">Crear Factura</a></td>
-					<td><a th:href="@{/form/} + ${cliente.id}">Editar</a></td>
-					<td><a th:href="@{/eliminar/} + ${cliente.id}">Eliminar</a></td>
+					<td sec:authorize="hasRole('ROLE_ADMIN')"><a
+						th:href="@{/form/} + ${cliente.id}">Editar</a></td>
+					<td sec:authorize="hasRole('ROLE_ADMIN')"><a
+						th:href="@{/eliminar/} + ${cliente.id}">Eliminar</a></td>
 
 				</tr>
 			</tbody>

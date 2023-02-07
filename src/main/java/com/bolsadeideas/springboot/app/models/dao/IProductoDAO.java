@@ -14,5 +14,5 @@ public interface IProductoDAO extends CrudRepository<Producto, Long> {
 	public List<Producto> buscarPorNombre(String term);
 
 	// Segunda Opcion con query prefedinidas
-	public List<Producto> findByNombreLikeIgnoreCase(String term);
+	public List<Producto> findByNombreLikeIgnoreCase(String nombre);
 }
