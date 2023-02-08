@@ -80,7 +80,10 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter{
 	//Esto es para JPA
 	@Autowired
 	public void configurerGlobal(AuthenticationManagerBuilder build) throws Exception{
+<<<<<<< HEAD
 		
+=======
+>>>>>>> main
 		build.userDetailsService(jpaUserDetailsService)
 		.passwordEncoder(passwordEncoder);
 	

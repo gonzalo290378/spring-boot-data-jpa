@@ -71,6 +71,24 @@ public class ClienteServiceImp implements IClienteService {
 	}
 
 	@Transactional
+<<<<<<< HEAD
+=======
+	public void saveFactura(Factura factura) {
+		facturaDAO.save(factura);
+	}
+
+	@Transactional(readOnly = true)
+	public Producto findProductoById(Long id) {
+		return productoDAO.findById(id).orElse(null);
+	}
+
+	@Transactional(readOnly = true)
+	public Factura findFacturaById(Long id) {
+		return facturaDAO.findById(id).orElse(null);
+	}
+
+	@Transactional
+>>>>>>> main
 	public void deleteFactura(Long id) {
 		facturaDAO.deleteById(id);
 	}
